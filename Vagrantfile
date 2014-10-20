@@ -9,6 +9,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     puppet.module_path = "/Users/kyle/.puppet/modules"
   end
 
+  config.vm.provision "file", source: "compile.sh", destination: "~/compile.sh"
+  config.vm.provision "file", source: "dist.sh", destination: "~/dist.sh"
+  config.vm.provision "file", source: "run.sh", destination: "~/run.sh"
+  config.vm.provision "file", source: "monte_carlo_pi.c", destination: "~/monte_carlo_pi.c"
+
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024
     v.cpus = 2
