@@ -33,36 +33,37 @@ int main(int argc, char *argv[]) {
   int my_rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
 
-  if(my_rank == 0) {
-    printf("total processes: %d\n", world_size);
-  }
-
-  srand(seed + my_rank);
-
-  int iter = total_iter / world_size;
-  int global_within_circle, within_circle;
-  int i;
-
   double start_time, end_time, actual_time;
+
   double global_ratio, ratio;
   double global_pi, pi;
+  int global_within_circle, within_circle;
+
+  int iter = total_iter / (world_size - 1);
 
   if(my_rank == 0) {
+    printf("total processes: %d\n", world_size);
     start_time = MPI_Wtime();
-  }
+  } else {
 
-  for(i=0; i<iter; i++) {
-    Point p = generate_random_point();
-    if(distance(p.x, p.y, (double)1, (double)1) <= (double)1) {
-      within_circle++;
+    srand(seed + my_rank);
+
+    int i;
+    for(i=0; i<iter; i++) {
+      Point p = generate_random_point();
+      if(distance(p.x, p.y, (double)1, (double)1) <= (double)1) {
+        within_circle++;
+      }
     }
   }
 
-  MPI_Reduce(&within_circle, &global_within_circle, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-
-  ratio = (double)within_circle / (double)iter;
-  pi = ratio * 4.0;
+  // ratio = (double)within_circle / (double)iter;
+  // pi = ratio * 4.0;
   // printf("Local PI for %d: %f\n", my_rank, pi);
+
+
+  MPI_Reduce(&within_circle, &global_within_circle, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+  // MPI_Barrier(MPI_COMM_WORLD);
 
   if(my_rank == 0) {
     global_ratio = (double)global_within_circle / (double)total_iter;
