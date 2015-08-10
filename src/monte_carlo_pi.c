@@ -36,8 +36,8 @@ int main(int argc, char *argv[]) {
 
   double start_time, end_time, actual_time;
 
-  double global_ratio, ratio;
-  double global_pi, pi;
+  double global_ratio;
+  double global_pi;
   long global_within_circle = 0;
   long within_circle = 0;
 
@@ -58,11 +58,6 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  // ratio = (double)within_circle / (double)iter;
-  // pi = ratio * 4.0;
-  // printf("Local PI for %d: %f\n", my_rank, pi);
-
-
   MPI_Reduce(&within_circle, &global_within_circle, 1, MPI_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
   // MPI_Barrier(MPI_COMM_WORLD);
 
@@ -73,7 +68,7 @@ int main(int argc, char *argv[]) {
     end_time = MPI_Wtime();
     actual_time = end_time - start_time;
 
-    printf("PI is approximately: %f\n", global_pi);
+    printf("PI is approximately: %0.12f\n", global_pi);
     printf("Average time to compute PI: %0.02f seconds\n", actual_time);
   }
 
