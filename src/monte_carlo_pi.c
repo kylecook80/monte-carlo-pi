@@ -1,6 +1,7 @@
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <math.h>
 
 typedef struct {
@@ -22,8 +23,8 @@ Point generate_random_point(void) {
 }
 
 int main(int argc, char *argv[]) {
-  int total_iter = atoi(argv[1]);
-  int seed = atoi(argv[2]);
+  long total_iter = atoi(argv[1]);
+  long seed = atoi(argv[2]);
 
   MPI_Init(NULL, NULL);
 
@@ -37,18 +38,18 @@ int main(int argc, char *argv[]) {
 
   double global_ratio, ratio;
   double global_pi, pi;
-  int global_within_circle, within_circle;
+  long global_within_circle = 0;
+  long within_circle = 0;
 
-  int iter = total_iter / (world_size - 1);
+  long iter = total_iter / (world_size - 1);
 
   if(my_rank == 0) {
     printf("total processes: %d\n", world_size);
     start_time = MPI_Wtime();
   } else {
-
     srand(seed + my_rank);
 
-    int i;
+    long i;
     for(i=0; i<iter; i++) {
       Point p = generate_random_point();
       if(distance(p.x, p.y, (double)1, (double)1) <= (double)1) {
