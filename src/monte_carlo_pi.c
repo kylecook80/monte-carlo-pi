@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
   // printf("Local PI for %d: %f\n", my_rank, pi);
 
 
-  MPI_Reduce(&within_circle, &global_within_circle, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&within_circle, &global_within_circle, 1, MPI_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
   // MPI_Barrier(MPI_COMM_WORLD);
 
   if(my_rank == 0) {
