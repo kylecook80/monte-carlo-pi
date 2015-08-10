@@ -23,7 +23,7 @@ Point generate_random_point(void) {
 }
 
 int main(int argc, char *argv[]) {
-  long total_iter = atoi(argv[1]);
+  long total_iter = atol(argv[1]);
   long seed = atoi(argv[2]);
 
   MPI_Init(NULL, NULL);
